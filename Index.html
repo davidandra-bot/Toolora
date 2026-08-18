@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolora - Free Online Tools | Every Tool You Need Instantly</title>
+    <meta name="description" content="Toolora offers 20+ free online tools for PDF, images, text, generators, and calculators. 100% private, processed in your browser.">
+    <meta name="keywords" content="free online tools, PDF tools, image tools, text tools, generators, calculators">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="index.html" class="active">Home</a>
+                <a href="#tools">Tools</a>
+                <a href="#categories">Categories</a>
+                <a href="about.html">About</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Every tool you need.<br><span>Instantly.</span></h1>
+            <p>Free online tools processed privately in your browser. Your files never leave your device.</p>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="What do you need to do today?" onkeyup="searchTools()">
+                <span>🔍</span>
+            </div>
+            <div class="trust-badges">
+                <span>🔒 100% Private</span>
+                <span>⚡ Instant Processing</span>
+                <span>✅ No Sign-up</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="ad-banner">
+            <p class="ad-label">Advertisement</p>
+            <script type="text/javascript">
+                atOptions = {'key' : 'ecfd53d8dd228d934242cb9d2ca7cef9','format' : 'iframe','height' : 90,'width' : 728,'params' : {}};
+            </script>
+            <script type="text/javascript" src="https://guyprior.com/ecfd53d8dd228d934242cb9d2ca7cef9/invoke.js"></script>
+        </div>
+    </div>
+
+    <section class="section" id="tools">
+        <div class="container">
+            <h2 class="section-title">Popular Tools</h2>
+            <div class="tools-grid" id="toolsGrid"></div>
+        </div>
+    </section>
+
+    <section class="section" id="categories" style="background:#f8fafc;">
+        <div class="container">
+            <h2 class="section-title">Categories</h2>
+            <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div>
+                    <h3>Toolora</h3>
+                    <p>Every tool you need. Instantly.</p>
+                </div>
+                <div>
+                    <h4>Tools</h4>
+                    <a href="tools/pdf-merge.html">PDF Merge</a>
+                    <a href="tools/image-compress.html">Image Compress</a>
+                    <a href="tools/password-generator.html">Password Generator</a>
+                </div>
+                <div>
+                    <h4>Company</h4>
+                    <a href="about.html">About</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+            </div>
+            <p style="text-align:center;margin-top:20px;">© 2024 Toolora. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div class="sticky-ad" id="stickyAd">
+        <button onclick="closeStickyAd()">✕</button>
+        <script type="text/javascript">
+            atOptions = {'key' : 'dbd04fc7b866d1fcf89c1288b828a360','format' : 'iframe','height' : 50,'width' : 320,'params' : {}};
+        </script>
+        <script type="text/javascript" src="https://guyprior.com/dbd04fc7b866d1fcf89c1288b828a360/invoke.js"></script>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
