@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Generator - Toolora | Free Color Scheme Generator</title>
+    <meta name="description" content="Generate beautiful color palettes instantly. Free online color scheme generator with harmonious colors.">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">🎨 Color Palette Generator</h1>
+        <p>Generate beautiful color schemes for your designs</p>
+
+        <button class="btn" onclick="generatePalette()">Generate New Palette</button>
+        <div id="paletteResult" style="margin:20px 0;"></div>
+        <button class="btn btn-outline" onclick="copyAllColors()">Copy All Colors</button>
+    </div>
+
+    <script>
+        let currentColors = [];
+
+        function generatePalette() {
+            const baseHue = Math.floor(Math.random() * 360);
+            currentColors = [];
+            
+            for (let i = 0; i < 5; i++) {
+                const hue = (baseHue + i * 30) % 360;
+                const color = 'hsl(' + hue + ', 70%, 50%)';
+                currentColors.push(color);
+            }
+            
+            document.getElementById('paletteResult').innerHTML = currentColors.map(function(color) {
+                return '<div style="background:' + color + ';padding:30px;border-radius:10px;margin:10px 0;cursor:pointer;color:white;font-weight:bold;display:flex;justify-content:space-between;align-items:center;" onclick="copyColor(\'' + color + '\')"><span>' + color + '</span><span>📋 Copy</span></div>';
+            }).join('');
+        }
+
+        function copyColor(color) {
+            navigator.clipboard.writeText(color);
+            alert('Color copied: ' + color);
+        }
+
+        function copyAllColors() {
+            if (currentColors.length > 0) {
+                navigator.clipboard.writeText(currentColors.join(', '));
+                alert('All colors copied!');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+
+        // Generate on load
+        generatePalette();
+    </script>
+</body>
+</html>
