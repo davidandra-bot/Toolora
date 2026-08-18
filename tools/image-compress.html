@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Compress - Toolora | Free Online Image Compressor</title>
+    <meta name="description" content="Compress images online for free. Reduce image file size while maintaining quality. Works in your browser.">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">🗜️ Image Compress</h1>
+        <p>Reduce image file size while maintaining quality</p>
+
+        <div class="upload-area" onclick="document.getElementById('imgFileInput').click()">
+            <div class="icon">🖼️</div>
+            <h3>Click to upload image</h3>
+            <p>or drag and drop</p>
+            <input type="file" id="imgFileInput" accept="image/*" style="display:none;" onchange="handleImageUpload(this.files[0])">
+        </div>
+
+        <div id="imgPreview" style="display:none;text-align:center;margin:20px 0;">
+            <img id="imgPreviewEl" style="max-width:100%;max-height:300px;border-radius:10px;">
+            <p id="imgOriginalSize" style="margin-top:10px;color:var(--muted);"></p>
+        </div>
+
+        <div id="imgQualitySection" style="display:none;">
+            <label>Quality: <span id="imgQualityVal">70</span>%</label>
+            <input type="range" id="imgQuality" min="10" max="100" value="70" oninput="document.getElementById('imgQualityVal').textContent=this.value">
+            <button class="btn" onclick="compressImage()">Compress Image</button>
+        </div>
+
+        <div id="imgCompressedResult" style="display:none;">
+            <div class="result-box" style="text-align:center;">
+                <img id="imgCompressedEl" style="max-width:100%;max-height:300px;border-radius:10px;">
+                <p id="imgCompressedSize" style="margin-top:10px;color:var(--muted);"></p>
+                <p id="imgSavings" style="color:#10B981;font-weight:bold;"></p>
+            </div>
+            <button class="btn" onclick="downloadCompressedImage()">Download Compressed Image</button>
+        </div>
+    </div>
+
+    <div class="ad-banner container">
+        <p class="ad-label">Advertisement</p>
+        <script src="https://guyprior.com/b8/46/c1/b846c1ebc7267264b267528a093336e4.js"></script>
+    </div>
+
+    <script>
+        let originalImageFile = null;
+        let compressedImageBlob = null;
+
+        function handleImageUpload(file) {
+            if (!file) return;
+            originalImageFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imgPreview').style.display = 'block';
+                document.getElementById('imgPreviewEl').src = e.target.result;
+                document.getElementById('imgOriginalSize').textContent = 'Original: ' + (file.size/1024).toFixed(2) + ' KB';
+                document.getElementById('imgQualitySection').style.display = 'block';
+                document.getElementById('imgCompressedResult').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function compressImage() {
+            const quality = parseInt(document.getElementById('imgQuality').value) / 100;
+            const img = document.getElementById('imgPreviewEl');
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            canvas.toBlob(function(blob) {
+                compressedImageBlob = blob;
+                document.getElementById('imgCompressedResult').style.display = 'block';
+                document.getElementById('imgCompressedEl').src = URL.createObjectURL(blob);
+                document.getElementById('imgCompressedSize').textContent = 'Compressed: ' + (blob.size/1024).toFixed(2) + ' KB';
+                
+                const savings = ((1 - blob.size/originalImageFile.size) * 100).toFixed(1);
+                document.getElementById('imgSavings').textContent = 'Saved ' + savings + '%';
+            }, originalImageFile.type, quality);
+        }
+
+        function downloadCompressedImage() {
+            if (compressedImageBlob) {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(compressedImageBlob);
+                a.download = 'compressed-' + originalImageFile.name;
+                a.click();
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
