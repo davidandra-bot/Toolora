@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resize - Toolora | Free Online Image Resizer</title>
+    <meta name="description" content="Resize images online for free. Change image dimensions instantly in your browser.">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">📐 Image Resize</h1>
+        <p>Resize images to exact dimensions</p>
+
+        <div class="upload-area" onclick="document.getElementById('resizeFileInput').click()">
+            <div class="icon">📐</div>
+            <h3>Click to upload image</h3>
+            <input type="file" id="resizeFileInput" accept="image/*" style="display:none;" onchange="handleResizeUpload(this.files[0])">
+        </div>
+
+        <div id="resizePreview" style="display:none;">
+            <img id="resizePreviewEl" style="max-width:100%;max-height:200px;border-radius:10px;margin:20px 0;">
+            <div class="grid-2">
+                <div>
+                    <label>Width (px)</label>
+                    <input type="number" id="resizeWidth">
+                </div>
+                <div>
+                    <label>Height (px)</label>
+                    <input type="number" id="resizeHeight">
+                </div>
+            </div>
+            <button class="btn" onclick="resizeImage()">Resize Image</button>
+        </div>
+
+        <div id="resizeResult" style="display:none;">
+            <img id="resizeResultEl" style="max-width:100%;border-radius:10px;margin:20px 0;">
+            <button class="btn" onclick="downloadResizedImage()">Download</button>
+        </div>
+    </div>
+
+    <script>
+        let resizeFile = null;
+        let resizedBlob = null;
+
+        function handleResizeUpload(file) {
+            if (!file) return;
+            resizeFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('resizePreview').style.display = 'block';
+                document.getElementById('resizePreviewEl').src = e.target.result;
+                document.getElementById('resizeWidth').value = document.getElementById('resizePreviewEl').naturalWidth;
+                document.getElementById('resizeHeight').value = document.getElementById('resizePreviewEl').naturalHeight;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function resizeImage() {
+            const width = parseInt(document.getElementById('resizeWidth').value);
+            const height = parseInt(document.getElementById('resizeHeight').value);
+            const img = document.getElementById('resizePreviewEl');
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            canvas.toBlob(function(blob) {
+                resizedBlob = blob;
+                document.getElementById('resizeResult').style.display = 'block';
+                document.getElementById('resizeResultEl').src = URL.createObjectURL(blob);
+            }, resizeFile.type);
+        }
+
+        function downloadResizedImage() {
+            if (resizedBlob) {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(resizedBlob);
+                a.download = 'resized-' + resizeFile.name;
+                a.click();
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
