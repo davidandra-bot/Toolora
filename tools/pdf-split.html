@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Split - Toolora | Free Online PDF Splitter</title>
+    <meta name="description" content="Split PDF files into individual pages. Free, private, and works in your browser.">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/file-saver/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">✂️ PDF Split</h1>
+        <p>Split PDF into individual pages</p>
+
+        <div class="upload-area" onclick="document.getElementById('pdfInput').click()">
+            <div class="icon">📄</div>
+            <h3>Click to select PDF</h3>
+            <input type="file" id="pdfInput" accept=".pdf" style="display:none;" onchange="handlePDF(this.files[0])">
+        </div>
+
+        <div id="pdfInfo" style="display:none;"></div>
+        <button class="btn" id="splitBtn" onclick="splitPDF()" style="display:none;">Split PDF</button>
+        <div class="result-box" id="splitResult" style="display:none;"></div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+
+        function handlePDF(file) {
+            if (!file) return;
+            selectedFile = file;
+            document.getElementById('pdfInfo').style.display = 'block';
+            document.getElementById('pdfInfo').innerHTML = '<p>📄 ' + file.name + ' (' + (file.size/1024).toFixed(2) + ' KB)</p>';
+            document.getElementById('splitBtn').style.display = 'block';
+        }
+
+        async function splitPDF() {
+            if (!selectedFile) return;
+            
+            const btn = document.getElementById('splitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Splitting...';
+            
+            try {
+                const arrayBuffer = await selectedFile.arrayBuffer();
+                const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+                const pageCount = pdf.getPageCount();
+                
+                const zip = new JSZip();
+                
+                for (let i = 0; i < pageCount; i++) {
+                    const newPdf = await PDFLib.PDFDocument.create();
+                    const [page] = await newPdf.copyPages(pdf, [i]);
+                    newPdf.addPage(page);
+                    const bytes = await newPdf.save();
+                    zip.file('page-' + (i + 1) + '.pdf', bytes);
+                }
+                
+                const content = await zip.generateAsync({ type: 'blob' });
+                saveAs(content, 'split-pages.zip');
+                
+                document.getElementById('splitResult').style.display = 'block';
+                document.getElementById('splitResult').innerHTML = '✅ PDF split into ' + pageCount + ' pages! Download started...';
+            } catch (error) {
+                alert('Error splitting PDF: ' + error.message);
+            }
+            
+            btn.disabled = false;
+            btn.textContent = 'Split PDF';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
