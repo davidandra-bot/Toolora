@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Converter - Toolora | Free Online Image Format Converter</title>
+    <meta name="description" content="Convert images between PNG, JPEG, WEBP, and BMP formats. Free online image converter.">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">🔄 Image Converter</h1>
+        <p>Convert between image formats</p>
+
+        <div class="upload-area" onclick="document.getElementById('convertFileInput').click()">
+            <div class="icon">🔄</div>
+            <h3>Click to upload image</h3>
+            <input type="file" id="convertFileInput" accept="image/*" style="display:none;" onchange="handleConvertUpload(this.files[0])">
+        </div>
+
+        <div id="convertPreview" style="display:none;">
+            <img id="convertPreviewEl" style="max-width:100%;max-height:200px;border-radius:10px;margin:20px 0;">
+            <label>Convert to:</label>
+            <select id="convertFormat">
+                <option value="image/png">PNG</option>
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/webp">WEBP</option>
+                <option value="image/bmp">BMP</option>
+            </select>
+            <button class="btn" onclick="convertImage()">Convert Image</button>
+        </div>
+
+        <div id="convertResult" style="display:none;">
+            <img id="convertResultEl" style="max-width:100%;border-radius:10px;margin:20px 0;">
+            <button class="btn" onclick="downloadConvertedImage()">Download</button>
+        </div>
+    </div>
+
+    <script>
+        let convertFile = null;
+        let convertedBlob = null;
+
+        function handleConvertUpload(file) {
+            if (!file) return;
+            convertFile = file;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('convertPreview').style.display = 'block';
+                document.getElementById('convertPreviewEl').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function convertImage() {
+            const format = document.getElementById('convertFormat').value;
+            const img = document.getElementById('convertPreviewEl');
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            
+            canvas.toBlob(function(blob) {
+                convertedBlob = blob;
+                document.getElementById('convertResult').style.display = 'block';
+                document.getElementById('convertResultEl').src = URL.createObjectURL(blob);
+            }, format);
+        }
+
+        function downloadConvertedImage() {
+            if (convertedBlob) {
+                const ext = document.getElementById('convertFormat').value.split('/')[1];
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(convertedBlob);
+                a.download = 'converted.' + ext;
+                a.click();
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
