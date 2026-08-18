@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Summarizer - Toolora | Free Text Summarizer</title>
+    <meta name="description" content="Summarize long texts instantly. Free online text summarizer tool.">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">📋 AI Summarizer</h1>
+        <p>Summarize long texts instantly</p>
+
+        <textarea id="summarizeInput" placeholder="Enter text to summarize..." style="min-height:250px;"></textarea>
+        <button class="btn" onclick="summarizeText()">Summarize Text</button>
+
+        <div class="result-box" id="summarizeResult" style="display:none;"></div>
+        <button class="btn btn-outline" id="copyBtn" onclick="copyResult()" style="display:none;">Copy Summary</button>
+    </div>
+
+    <script>
+        let summaryText = '';
+
+        function summarizeText() {
+            const input = document.getElementById('summarizeInput').value;
+            if (!input) { alert('Enter text first'); return; }
+            
+            const sentences = input.split(/[.!?]+/).filter(function(s) { return s.trim().length > 0; });
+            const summaryCount = Math.max(1, Math.ceil(sentences.length / 3));
+            
+            summaryText = sentences.slice(0, summaryCount).join('. ') + '.';
+            
+            document.getElementById('summarizeResult').style.display = 'block';
+            document.getElementById('summarizeResult').textContent = summaryText;
+            document.getElementById('copyBtn').style.display = 'block';
+        }
+
+        function copyResult() {
+            if (summaryText) {
+                navigator.clipboard.writeText(summaryText);
+                alert('Copied!');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
