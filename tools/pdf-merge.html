@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Merge - Toolora | Free Online PDF Merger</title>
+    <meta name="description" content="Merge multiple PDF files into one document. Free, private, and works in your browser.">
+    <link rel="stylesheet" href="../style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/file-saver/2.0.5/FileSaver.min.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">📄 PDF Merge</h1>
+        <p>Combine multiple PDF files into one document</p>
+
+        <div class="upload-area" onclick="document.getElementById('pdfInput').click()">
+            <div class="icon">📁</div>
+            <h3>Click to select PDFs</h3>
+            <p>or drag and drop multiple files</p>
+            <input type="file" id="pdfInput" accept=".pdf" multiple style="display:none;" onchange="handlePDFFiles(this.files)">
+        </div>
+
+        <div id="pdfList"></div>
+
+        <button class="btn" id="mergeBtn" onclick="mergePDFs()" disabled>Merge PDFs</button>
+        <div class="result-box" id="mergeResult" style="display:none;"></div>
+    </div>
+
+    <script>
+        let pdfFiles = [];
+
+        function handlePDFFiles(files) {
+            pdfFiles = Array.from(files).filter(f => f.type === 'application/pdf');
+            displayFiles();
+        }
+
+        function displayFiles() {
+            const list = document.getElementById('pdfList');
+            list.innerHTML = '<h3>Files to merge (' + pdfFiles.length + '):</h3>';
+            
+            pdfFiles.forEach(function(file, index) {
+                list.innerHTML += '<div class="result-box" style="display:flex;justify-content:space-between;align-items:center;"><span>📄 ' + file.name + '</span><button class="btn btn-outline" style="width:auto;padding:5px 10px;margin:0;" onclick="removeFile(' + index + ')">✕</button></div>';
+            });
+            
+            document.getElementById('mergeBtn').disabled = pdfFiles.length < 2;
+        }
+
+        function removeFile(index) {
+            pdfFiles.splice(index, 1);
+            displayFiles();
+        }
+
+        async function mergePDFs() {
+            if (pdfFiles.length < 2) return;
+            
+            const btn = document.getElementById('mergeBtn');
+            btn.disabled = true;
+            btn.textContent = 'Merging...';
+            
+            try {
+                const mergedPdf = await PDFLib.PDFDocument.create();
+                
+                for (const file of pdfFiles) {
+                    const arrayBuffer = await file.arrayBuffer();
+                    const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+                    const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    pages.forEach(page => mergedPdf.addPage(page));
+                }
+                
+                const bytes = await mergedPdf.save();
+                const blob = new Blob([bytes], { type: 'application/pdf' });
+                saveAs(blob, 'merged.pdf');
+                
+                document.getElementById('mergeResult').style.display = 'block';
+                document.getElementById('mergeResult').innerHTML = '✅ PDFs merged successfully! Download started...';
+            } catch (error) {
+                alert('Error merging PDFs: ' + error.message);
+            }
+            
+            btn.disabled = false;
+            btn.textContent = 'Merge PDFs';
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
