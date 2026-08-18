@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Remover - Toolora | Free AI Background Remover</title>
+    <meta name="description" content="Remove image backgrounds instantly. Free AI-powered background remover tool.">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">🎯 Background Remover</h1>
+        <p>Remove image backgrounds with AI</p>
+
+        <div class="upload-area" onclick="document.getElementById('bgInput').click()">
+            <div class="icon">🎯</div>
+            <h3>Click to upload image</h3>
+            <input type="file" id="bgInput" accept="image/*" style="display:none;" onchange="handleImage(this.files[0])">
+        </div>
+
+        <div id="imagePreview" style="display:none;text-align:center;">
+            <img id="previewEl" style="max-width:100%;max-height:300px;border-radius:10px;margin:20px 0;">
+            <div class="result-box">⚠️ Background removal requires AI API integration (remove.bg or similar).</div>
+        </div>
+    </div>
+
+    <script>
+        function handleImage(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').style.display = 'block';
+                document.getElementById('previewEl').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
