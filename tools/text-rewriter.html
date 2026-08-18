@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Text Rewriter - Toolora | Free Text Rewriting Tool</title>
+    <meta name="description" content="Rewrite text instantly with AI. Free online text rewriter tool.">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <div class="container header-inner">
+            <a href="../index.html" class="logo">
+                <span class="logo-icon">T</span>
+                <span>Toolora</span>
+            </a>
+            <nav>
+                <a href="../index.html">Home</a>
+                <a href="../index.html#tools">Tools</a>
+            </nav>
+            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+        </div>
+    </header>
+
+    <div class="tool-page">
+        <a href="../index.html" class="btn btn-outline" style="width:auto;padding:10px 20px;">← Back</a>
+        
+        <h1 style="margin-top:20px;">🤖 AI Text Rewriter</h1>
+        <p>Rewrite text with AI-powered synonyms</p>
+
+        <textarea id="rewriteInput" placeholder="Enter text to rewrite..." style="min-height:200px;"></textarea>
+        <button class="btn" onclick="rewriteText()">Rewrite Text</button>
+
+        <div class="result-box" id="rewriteResult" style="display:none;"></div>
+        <button class="btn btn-outline" id="copyBtn" onclick="copyResult()" style="display:none;">Copy Result</button>
+    </div>
+
+    <script>
+        let rewrittenText = '';
+
+        function rewriteText() {
+            const input = document.getElementById('rewriteInput').value;
+            if (!input) { alert('Enter text first'); return; }
+            
+            const synonyms = {
+                'good': 'excellent', 'bad': 'poor', 'big': 'large', 'small': 'tiny',
+                'fast': 'quick', 'slow': 'leisurely', 'happy': 'delighted', 'sad': 'melancholy',
+                'important': 'crucial', 'help': 'assist', 'make': 'create', 'use': 'utilize',
+                'show': 'demonstrate', 'get': 'obtain', 'need': 'require', 'start': 'commence'
+            };
+            
+            const words = input.split(' ');
+            rewrittenText = words.map(function(word) {
+                const lower = word.toLowerCase().replace(/[^a-z]/g, '');
+                return synonyms[lower] ? word.replace(lower, synonyms[lower]) : word;
+            }).join(' ');
+            
+            document.getElementById('rewriteResult').style.display = 'block';
+            document.getElementById('rewriteResult').textContent = rewrittenText;
+            document.getElementById('copyBtn').style.display = 'block';
+        }
+
+        function copyResult() {
+            if (rewrittenText) {
+                navigator.clipboard.writeText(rewrittenText);
+                alert('Copied!');
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
