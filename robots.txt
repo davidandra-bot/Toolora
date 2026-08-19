@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://toolora.netlify.app/sitemap.xml
+Sitemap: https://freetoolora.netlify.app/sitemap.xml
